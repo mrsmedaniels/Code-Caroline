@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>North Carolina Counties Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link 
+    rel="stylesheet" 
+    href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 600px; width: 100%; }
+  </style>
+</head>
+<body>
+  <h3>North Carolina Counties Map</h3>
+  <div id="map"></div>
+
+  <script 
+    src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([35.5, -79.8], 7); // Centered on NC
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 10,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Mapping of county names to their specific Register of Deeds URLs
+    const countyLinks = {
+      "Alamance": "https://www.statewidetitle.com/registers.asp?county=Alamance",
+      "Alexander": "https://www.statewidetitle.com/registers.asp?county=Alexander",
+      "Alleghany": "https://www.statewidetitle.com/registers.asp?county=Alleghany",
+      "Anson": "https://www.statewidetitle.com/registers.asp?county=Anson",
+      "Ashe": "https://www.statewidetitle.com/registers.asp?county=Ashe",
+      "Avery": "https://www.statewidetitle.com/registers.asp?county=Avery",
+      "Beaufort": "https://www.statewidetitle.com/registers.asp?county=Beaufort",
+      "Bertie": "https://www.statewidetitle.com/registers.asp?county=Bertie",
+      "Bladen": "https://www.statewidetitle.com/registers.asp?county=Bladen",
+      "Brunswick": "https://www.statewidetitle.com/registers.asp?county=Brunswick",
+      "Buncombe": "https://www.statewidetitle.com/registers.asp?county=Buncombe",
+      "Burke": "https://www.statewidetitle.com/registers.asp?county=Burke",
+      "Cabarrus": "https://www.statewidetitle.com/registers.asp?county=Cabarrus",
+      "Caldwell": "https://www.statewidetitle.com/registers.asp?county=Caldwell",
+      "Camden": "https://www.statewidetitle.com/registers.asp?county=Camden",
+      "Carteret": "https://www.statewidetitle.com/registers.asp?county=Carteret",
+      "Caswell": "https://www.statewidetitle.com/registers.asp?county=Caswell",
+      "Catawba": "https://www.statewidetitle.com/registers.asp?county=Catawba",
+      "Chatham": "https://www.statewidetitle.com/registers.asp?county=Chatham",
+      "Cherokee": "https://www.statewidetitle.com/registers.asp?county=Cherokee",
+      "Chowan": "https://www.statewidetitle.com/registers.asp?county=Chowan",
+      "Clay": "https://www.statewidetitle.com/registers.asp?county=Clay",
+      "Cleveland": "https://www.statewidetitle.com/registers.asp?county=Cleveland",
+      "Columbus": "https://www.statewidetitle.com/registers.asp?county=Columbus",
+      "Craven": "https://www.statewidetitle.com/registers.asp?county=Craven",
+      "Cumberland": "https://www.statewidetitle.com/registers.asp?county=Cumberland",
+      "Currituck": "https://www.statewidetitle.com/registers.asp?county=Currituck",
+      "Dare": "https://www.statewidetitle.com/registers.asp?county=Dare",
+      "Davidson": "https://www.statewidetitle.com/registers.asp?county=Davidson",
+      "Davie": "https://www.statewidetitle.com/registers.asp?county=Davie",
+      "Duplin": "https://www.statewidetitle.com/registers.asp?county=Duplin",
+      "Durham": "https://www.statewidetitle.com/registers.asp?county=Durham",
+      "Edgecombe": "https://www.statewidetitle.com/registers.asp?county=Edgecombe",
+      "Forsyth": "https://www.statewidetitle.com/registers.asp?county=Forsyth",
+      "Franklin": "https://www.statewidetitle.com/registers.asp?county=Franklin",
+      "Gaston": "https://www.statewidetitle.com/registers.asp?county=Gaston",
+      "Gates": "https://www.statewidetitle.com/registers.asp?county=Gates",
+      "Graham": "https://www.statewidetitle.com/registers.asp?county=Graham",
+      "Granville": "https://www.statewidetitle.com/registers.asp?county=Granville",
+      "Greene": "https://www.statewidetitle.com/registers.asp?county=Greene",
+      "Guilford": "https://www.statewidetitle.com/registers.asp?county=Guilford",
+      "Halifax": "https://www.statewidetitle.com/registers.asp?county=Halifax",
+      "Harnett": "https://www.statewidetitle.com/registers.asp?county=Harnett",
+      "Haywood": "https://www.statewidetitle.com/registers.asp?county=Haywood",
+      "Henderson": "https://www.statewidetitle.com/registers.asp?county=Henderson",
+      "Hertford": "https://www.statewidetitle.com/registers.asp?county=Hertford",
+      "Hoke": "https://www.statewidetitle.com/registers.asp?county=Hoke",
+      "Hyde": "https://www.statewidetitle.com/registers.asp?county=Hyde",
+      "Iredell": "https://www.statewidetitle.com/registers.asp?county=Iredell",
+      "Jackson": "https://www.statewidetitle.com/registers.asp?county=Jackson",
+      "Johnston": "https://www.statewidetitle.com/registers.asp?county=Johnston",
+      "Jones": "https://www.statewidetitle.com/registers.asp?county=Jones",
+      "Lee": "https://www.statewidetitle.com/registers.asp?county=Lee",
+      "Lenoir": "https://www.statewidetitle.com/registers.asp?county=Lenoir",
+      "Lincoln": "https://www.statewidetitle.com/registers.asp?county=Lincoln",
+      "Macon": "https://www.statewidetitle.com/registers.asp?county=Macon",
+      "Madison": "https://www.statewidetitle.com/registers.asp?county=Madison",
+      "Martin": "https://www.statewidetitle.com/registers.asp?county=Martin",
+      "McDowell": "https://www.statewidetitle.com/registers.asp?county=McDowell",
+      "Mecklenburg": "https://www.statewidetitle.com/registers.asp?county=Mecklenburg",
+      "Mitchell": "https://www.statewidetitle.com/registers.asp?county=Mitchell",
+      "Montgomery": "https://www.statewidetitle.com/registers.asp?county=Montgomery",
+      "Moore": "https://www.statewidetitle.com/registers.asp?county=Moore",
+      "Nash": "https://www.statewidetitle.com/registers.asp?county=Nash",
+      "New Hanover": "https://www.statewidetitle.com/registers.asp?county=New%20Hanover",
+      "Northampton": "https://www.statewidetitle.com/registers.asp?county=Northampton",
+      "Onslow": "https://www.statewidetitle.com/registers.asp?county=Onslow",
+      "Orange": "https://www.statewidetitle.com/registers.asp?county=Orange",
+      "Pamlico": "https://www.statewidetitle.com/registers.asp?county=Pamlico",
+      "Pasquotank": "https://www.statewidetitle.com/registers.asp?county=Pasquotank",
+      "Pender": "https://www.statewidetitle.com/registers.asp?county=Pender",
+      "Perquimans": "https://www.statewidetitle.com/registers.asp?county=Perquimans",
+      "Person": "https://www.statewidetitle.com/registers.asp?county=Person",
+      "Pitt": "https://www.statewidetitle.com/registers.asp?county=Pitt",
+      "Polk": "https://www.statewidetitle.com/registers.asp?county=Polk",
+      "Randolph": "https://www.statewidetitle.com/registers.asp?county=Randolph",
+      "Richmond": "https://www.statewidetitle.com/registers.asp?county=Richmond",
+      "Robeson": "https://www.statewidetitle.com/registers.asp?county=Robeson",
+      "Rockingham": "https://www.statewidetitle.com/registers.asp?county=Rockingham",
+      "Rowan": "https://www.statewidetitle.com/registers.asp?county=Rowan",
+      "Rutherford": "https://www.statewidetitle.com/registers.asp?county=Rutherford",
+
+::contentReference[oaicite:12]{index=12}
+ 
